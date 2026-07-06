@@ -349,7 +349,7 @@
     <div class="header-inner">
       <div class="logo-icon">📁</div>
       <div class="site-name">AugustDuarte <span>augustduarte.com</span></div>
-      <form method="POST" action="/logout">
+      <form method="POST" action="/api/logout">
         <button class="btn-logout" type="submit">Sign out</button>
       </form>
     </div>
@@ -436,7 +436,11 @@
 
     async function loadFiles() {
       const res = await fetch('/api/files');
-      if (!res.ok) return;
+      if (res.status === 401) { location.href = '/login'; return; }
+      if (!res.ok) {
+        document.getElementById('fileList').innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>Could not load files (${res.status}). Check your R2 binding in the Cloudflare dashboard.</p></div>`;
+        return;
+      }
       const files = await res.json();
 
       const list = document.getElementById('fileList');

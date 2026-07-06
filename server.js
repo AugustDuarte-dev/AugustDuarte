@@ -38,19 +38,25 @@ const s3 = new S3Client({
   },
 });
 
-// ── Multer → R2 ───────────────────────────────────────────────────────────────
+// ── Multer → R2 (lazy so server starts even before R2 vars are set) ───────────
 
-const upload = multer({
-  storage: multerS3({
-    s3,
-    bucket: R2_BUCKET,
-    key: (_req, file, cb) => {
-      const safe = path.basename(file.originalname).replace(/[^\w.\-\s]/g, '_');
-      cb(null, safe);
-    },
-  }),
-  limits: { fileSize: MAX_FILE_MB * 1024 * 1024 },
-});
+function getUpload() {
+  if (!R2_BUCKET) {
+    return (_req, _res, next) =>
+      next(new Error('R2_BUCKET is not configured. Set R2 environment variables in your hosting dashboard.'));
+  }
+  return multer({
+    storage: multerS3({
+      s3,
+      bucket: R2_BUCKET,
+      key: (_req, file, cb) => {
+        const safe = path.basename(file.originalname).replace(/[^\w.\-\s]/g, '_');
+        cb(null, safe);
+      },
+    }),
+    limits: { fileSize: MAX_FILE_MB * 1024 * 1024 },
+  }).array('files', 50);
+}
 
 // ── Express setup ─────────────────────────────────────────────────────────────
 
@@ -146,10 +152,13 @@ app.get('/api/files', requireAuth, async (_req, res) => {
 
 // ── API: Upload files ─────────────────────────────────────────────────────────
 
-app.post('/api/upload', requireAuth, upload.array('files', 50), (req, res) => {
-  if (!req.files || req.files.length === 0)
-    return res.status(400).json({ error: 'No files received' });
-  res.json({ success: true, uploaded: req.files.map(f => f.key) });
+app.post('/api/upload', requireAuth, (req, res, next) => {
+  getUpload()(req, res, (err) => {
+    if (err) return res.status(500).json({ error: err.message });
+    if (!req.files || req.files.length === 0)
+      return res.status(400).json({ error: 'No files received' });
+    res.json({ success: true, uploaded: req.files.map(f => f.key) });
+  });
 });
 
 // ── API: Download (signed URL, 5-min expiry) ──────────────────────────────────
