@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AugustDuarte · Sign In</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0b0b11;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 1rem;
+    }
+
+    /* Subtle grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(124,58,237,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124,58,237,.06) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 400px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      backdrop-filter: blur(12px);
+      position: relative;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .logo-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #7c3aed, #2563eb);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: .75rem;
+      font-size: 1.5rem;
+    }
+
+    .logo h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      letter-spacing: -.02em;
+    }
+
+    .logo p {
+      font-size: .85rem;
+      color: #64748b;
+      margin-top: .25rem;
+    }
+
+    .error-msg {
+      display: none;
+      background: rgba(239,68,68,.12);
+      border: 1px solid rgba(239,68,68,.3);
+      color: #fca5a5;
+      border-radius: 8px;
+      padding: .65rem .9rem;
+      font-size: .85rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .error-msg.visible { display: block; }
+
+    label {
+      display: block;
+      font-size: .8rem;
+      font-weight: 600;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: .4rem;
+    }
+
+    input {
+      width: 100%;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 8px;
+      padding: .75rem 1rem;
+      color: #f1f5f9;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color .15s;
+      -webkit-appearance: none;
+    }
+
+    input:focus {
+      border-color: #7c3aed;
+      background: rgba(124,58,237,.08);
+    }
+
+    .field { margin-bottom: 1rem; }
+
+    button[type="submit"] {
+      width: 100%;
+      margin-top: .5rem;
+      padding: .85rem;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #7c3aed, #2563eb);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .15s, transform .1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button[type="submit"]:active {
+      opacity: .85;
+      transform: scale(.98);
+    }
+
+    .domain {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: .78rem;
+      color: #334155;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">
+      <div class="logo-icon">📁</div>
+      <h1>AugustDuarte</h1>
+      <p>augustduarte.com · File Portal</p>
+    </div>
+
+    <div class="error-msg" id="errMsg">Incorrect username or password.</div>
+
+    <form method="POST" action="/login" autocomplete="on">
+      <div class="field">
+        <label for="username">Username</label>
+        <input
+          id="username"
+          name="username"
+          type="text"
+          autocomplete="username"
+          placeholder="Enter username"
+          required
+          autofocus
+        />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          autocomplete="current-password"
+          placeholder="Enter password"
+          required
+        />
+      </div>
+      <button type="submit">Sign In</button>
+    </form>
+
+    <p class="domain">augustduarte.com</p>
+  </div>
+
+  <script>
+    if (location.search.includes('error=1')) {
+      document.getElementById('errMsg').classList.add('visible');
+    }
+  </script>
+</body>
+</html>
