@@ -1,5 +1,12 @@
 {
   "name": "augustduarte",
   "version": "1.0.0",
-  "description": "AugustDuarte File Portal — Cloudflare Pages + Functions"
+  "description": "AugustDuarte File Portal — Cloudflare Pages + Functions",
+  "devDependencies": {
+    "wrangler": "^4.107.0"
+  },
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "preview": "wrangler dev"
+  }
 }
