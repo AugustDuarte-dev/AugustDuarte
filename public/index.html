@@ -465,10 +465,10 @@
             <div class="file-meta">${formatSize(f.size)} · ${formatDate(f.modified)}</div>
           </div>
           <div class="file-actions">
-            <button class="btn-action btn-download" onclick="downloadFile(${JSON.stringify(f.name)})">
+            <button class="btn-action btn-download" onclick="downloadFile(${escHtml(JSON.stringify(f.name))})">
               ⬇ Download
             </button>
-            <button class="btn-action btn-delete" onclick="deleteFile(${JSON.stringify(f.name)}, this)">
+            <button class="btn-action btn-delete" onclick="deleteFile(${escHtml(JSON.stringify(f.name))}, this)">
               🗑 Delete
             </button>
           </div>
